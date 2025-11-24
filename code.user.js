@@ -2230,7 +2230,7 @@
             const isBoosterPack = selectedItem.name.toLowerCase().endsWith('booster pack');
             if (isBoosterPack) {
                 const tradingCardsUrl = `/market/search?q=&category_753_Game%5B%5D=tag_app_${selectedItem.market_fee_app}&category_753_item_class%5B%5D=tag_item_class_2&appid=753`;
-                ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${tradingCardsUrl}"><span>查看交易卡牌在社区市场的情况</span></a></div>`);
+                ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${tradingCardsUrl}"><span>查看交易卡片在社区市场的情况</span></a></div>`);
             }
 
             if (getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) != 1) {
@@ -2367,11 +2367,11 @@
 
             if (showMiscOptions) {
                 buttonsHtml += `
-                    <a class="btn_green_white_innerfade btn_medium_wide sell_all_cards"><span>售卖所有卡牌</span></a>
+                    <a class="btn_green_white_innerfade btn_medium_wide sell_all_cards"><span>售卖所有卡片</span></a>
                     <div class="see_inventory_buttons">
                         <a class="btn_darkblue_white_innerfade btn_medium_wide turn_into_gems" style="display:none"><span>将选定物品转换成宝石</span></a>
-                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_all_booster_packs"><span>拆开所有助推包</span></a>
-                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_selected_booster_packs" style="display:none"><span>拆开选定的助推包</span></a>
+                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_all_booster_packs"><span>拆开所有加速包</span></a>
+                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_selected_booster_packs" style="display:none"><span>拆开选定的加速包</span></a>
                         <a class="btn_darkblue_white_innerfade btn_medium_wide gem_all_duplicates"><span>将所有重复物品变成宝石</span></a>
                     </div>
                 `;
@@ -3994,18 +3994,18 @@
                 <input type="checkbox" id="${SETTING_QUICK_SELL_BUTTONS}" ${getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) == 1 ? 'checked' : ''}>
             </div>
             <div style="margin-top:24px;">
-                普通卡牌最低价:&nbsp;
+                普通卡片最低价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MIN_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_NORMAL_PRICE)}>
                 &nbsp;和最高价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MAX_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_NORMAL_PRICE)}>
-                &nbsp;（普通卡牌）
+                &nbsp;（普通卡片）
             </div>
             <div style="margin-top:6px;">
-                箔卡最低价:&nbsp;
+                闪亮卡片最低价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MIN_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_FOIL_PRICE)}>
                 &nbsp;和最高价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MAX_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_FOIL_PRICE)}>
-                &nbsp;（箔卡）
+                &nbsp;（闪亮卡片）
             </div>
             <div style="margin-top:6px;">
                 其他物品最低价:&nbsp;
