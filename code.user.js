@@ -1478,13 +1478,13 @@
                 if (numberOfQueuedItems > 0) {
                     totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                    renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                    renderSpinner(`处理 ${numberOfQueuedItems} 件物品`);
                 }
             });
         }
 
         function sellAllCards() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1697,14 +1697,14 @@
                 if (numberOfQueuedItems > 0) {
                     totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                    renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                    renderSpinner(`处理 ${numberOfQueuedItems} 件物品`);
                 }
             });
         }
 
         // Unpacks all booster packs.
         function unpackAllBoosterPacks() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1743,7 +1743,7 @@
 
                 totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                renderSpinner(`处理 ${numberOfQueuedItems} 件物品`);
             });
         }
 
@@ -1751,7 +1751,7 @@
         function unpackSelectedBoosterPacks() {
             const ids = getSelectedItems();
 
-            renderSpinner('Loading inventory items');
+            renderSpinner('加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1787,7 +1787,7 @@
                 if (numberOfQueuedItems > 0) {
                     totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                    renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                    renderSpinner(`处理 ${numberOfQueuedItems} 件物品`);
                 }
             });
         }
@@ -1869,7 +1869,7 @@
             if (numberOfQueuedItems > 0) {
                 totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                renderSpinner(`处理 ${numberOfQueuedItems} 件物品`);
             }
         }
 
