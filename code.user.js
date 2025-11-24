@@ -1320,10 +1320,10 @@
             totals.innerHTML = '';
 
             if (totalPriceWithFeesOnMarket > 0) {
-                totals.innerHTML += `<div><strong>Total listed for ${formatPrice(totalPriceWithFeesOnMarket)}, you will receive ${formatPrice(totalPriceWithoutFeesOnMarket)}.</strong></div>`;
+                totals.innerHTML += `<div><strong>已挂出总价 ${formatPrice(totalPriceWithFeesOnMarket)}，你将获得 ${formatPrice(totalPriceWithoutFeesOnMarket)}。</strong></div>`;
             }
             if (totalScrap > 0) {
-                totals.innerHTML += `<div><strong>Total scrap ${totalScrap}.</strong></div>`;
+                totals.innerHTML += `<div><strong>宝石总数 ${totalScrap}。</strong></div>`;
             }
         }
 
@@ -2165,7 +2165,7 @@
         }
 
         function updateButtons() {
-            updateSellSelectedButton();
+                       updateSellSelectedButton();
             updateTurnIntoGemsButton();
             updateOpenBoosterPacksButton();
         }
@@ -2582,10 +2582,9 @@
                         : formatPrice(market.getPriceIncludingFees(sellPrice));
 
                     const elementName = `${(currentPage == PAGE_TRADEOFFER ? '#item' : '#')}${item.appid}_${item.contextid}_${item.id}`;
-                    const element = $(elementName);
 
-                    $('.inventory_item_price', element).remove();
-                    element.append(`<span class="inventory_item_price price_${sellPrice == 65535 ? 0 : market.getPriceIncludingFees(sellPrice)}">${itemPrice}</span>`);
+                    $('.inventory_item_price', elementName).remove();
+                    $(elementName).append(`<span class="inventory_item_price price_${sellPrice == 65535 ? 0 : market.getPriceIncludingFees(sellPrice)}">${itemPrice}</span>`);
 
                     return callback(true, cachedListings);
                 }
@@ -3401,11 +3400,11 @@
 
             let market_listing_selector;
             if (isPrice) {
-                market_listing_selector = $('.market_listing_table_header', elem).children().eq(1);
+                market_listing_selector = $('.market_listing_table_header', $(this).parent().parent()).children().eq(1);
             } else if (isDateOrQuantity) {
-                market_listing_selector = $('.market_listing_table_header', elem).children().eq(2);
+                market_listing_selector = $('.market_listing_table_header', $(this).parent().parent()).children().eq(2);
             } else if (isName) {
-                market_listing_selector = $('.market_listing_table_header', elem).children().eq(3);
+                market_listing_selector = $('.market_listing_table_header', $(this).parent().parent()).children().eq(3);
             }
             market_listing_selector.text(`${market_listing_selector.text()} ${asc ? arrow_up : arrow_down}`);
 
