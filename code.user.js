@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Steam Economy Enhancer
+// @name         Steam经济增强器
 // @icon         data:image/svg+xml,%0A%3Csvg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 267 267"%3E%3Ccircle cx="133.3" cy="133.3" r="133.3" fill="%2326566c"/%3E%3Cpath fill="%23ebebeb" fill-rule="nonzero" d="m50 133 83-83 84 83-84 84-83-84Zm83 62 62-61-62-62v123Z"/%3E%3C/svg%3E
 // @namespace    https://github.com/Nuklon
 // @author       Nuklon
 // @license      MIT
 // @version      7.1.20
-// @description  Enhances the Steam Inventory and Steam Market.
+// @description  增强Steam库存和Steam市场。
 // @match        https://steamcommunity.com/id/*/inventory*
 // @match        https://steamcommunity.com/profiles/*/inventory*
 // @match        https://steamcommunity.com/market*
@@ -117,7 +117,7 @@
 
         // If the request was stopped, we don't want to send it to the server and continue other requests.
         if (request.stopped) {
-            const error = new Error('Request was not sent to the server, something went wrong');
+            const error = new Error('请求未发送到服务器，发生了错误');
 
             setTimeout(() => request.queue.shift()?.(), 1);
             setTimeout(() => callback(error, null), 0);
@@ -162,7 +162,7 @@
              * @param {string} httpErrorText - textual portion of the HTTP status, in context of HTTP/2 it may be empty string.
              */
             error: (xhr, statusText, httpErrorText) => {
-                const error = new Error(`Request failed with status ${xhr.status || 0} (${statusText === 'error' ? 'http error' : statusText})`);
+                const error = new Error(`请求失败，状态码 ${xhr.status || 0} (${statusText === 'error' ? 'http 错误' : statusText})`);
 
                 error.url = url;
                 error.method = options.method;
@@ -317,7 +317,7 @@
         try {
             return localStorage.getItem(name);
         } catch (e) {
-            logConsole(`Failed to get local storage item ${name}, ${e}.`);
+            logConsole(`无法获取本地存储项 ${name}，错误信息：${e}。`);
             return null;
         }
     }
@@ -327,7 +327,7 @@
             localStorage.setItem(name, value);
             return true;
         } catch (e) {
-            logConsole(`Failed to set local storage item ${name}, ${e}.`);
+            logConsole(`无法设置本地存储项 ${name}，错误信息：${e}。`);
             return false;
         }
     }
@@ -336,7 +336,7 @@
         try {
             return sessionStorage.getItem(name);
         } catch (e) {
-            logConsole(`Failed to get session storage item ${name}, ${e}.`);
+            logConsole(`无法获取会话存储项 ${name}，错误信息：${e}。`);
             return null;
         }
     }
@@ -346,7 +346,7 @@
             sessionStorage.setItem(name, value);
             return true;
         } catch (e) {
-            logConsole(`Failed to set session storage item ${name}, ${e}.`);
+            logConsole(`无法设置会话存储项 ${name}，错误信息：${e}。`);
             return false;
         }
     }
@@ -1268,9 +1268,9 @@
 
     function isRetryMessage(message) {
         const messageList = [
-            'You cannot sell any items until your previous action completes.',
-            'There was a problem listing your item. Refresh the page and try again.',
-            'We were unable to contact the game\'s item server. The game\'s item server may be down or Steam may be experiencing temporary connectivity issues. Your listing has not been created. Refresh the page and try again.'
+            '在之前的操作完成之前，您无法出售任何物品。',
+            '列出物品时出现问题。请刷新页面重试。',
+            '我们无法联系游戏的物品服务器。游戏的物品服务器可能已关闭，或者Steam可能遇到临时连接问题。您的列表未创建。请刷新页面重试。'
         ];
 
         return messageList.indexOf(message) !== -1;
@@ -1320,10 +1320,10 @@
             totals.innerHTML = '';
 
             if (totalPriceWithFeesOnMarket > 0) {
-                totals.innerHTML += `<div><strong>Total listed for ${formatPrice(totalPriceWithFeesOnMarket)}, you will receive ${formatPrice(totalPriceWithoutFeesOnMarket)}.</strong></div>`;
+                totals.innerHTML += `<div><strong>总挂单价格 ${formatPrice(totalPriceWithFeesOnMarket)}，你将获得 ${formatPrice(totalPriceWithoutFeesOnMarket)}。</strong></div>`;
             }
             if (totalScrap > 0) {
-                totals.innerHTML += `<div><strong>Total scrap ${totalScrap}.</strong></div>`;
+                totals.innerHTML += `<div><strong>总宝石数 ${totalScrap}。</strong></div>`;
             }
         }
 
@@ -1338,7 +1338,7 @@
                 const padLeft = `${padLeftZero(`${totalNumberOfProcessedQueueItems}`, digits)} / ${totalNumberOfQueuedItems}`;
 
                 if (getSettingWithDefault(SETTING_PRICE_MIN_LIST_PRICE) * 100 >= market.getPriceIncludingFees(task.sellPrice)) {
-                    logDOM(`${padLeft} - ${itemNameWithAmount} is not listed due to ignoring price settings.`);
+                    logDOM(`${padLeft} - ${itemNameWithAmount} 因为忽略价格设置而未列出。`);
                     $(`#${task.item.appid}_${task.item.contextid}_${itemId}`).css('background', COLOR_PRICE_NOT_CHECKED);
                     next();
                     return;
@@ -1354,7 +1354,7 @@
                         const callback = () => setTimeout(() => next(), getRandomInt(1000, 1500));
 
                         if (success) {
-                            logDOM(`${padLeft} - ${itemNameWithAmount} listed for ${formatPrice(market.getPriceIncludingFees(task.sellPrice) * task.item.amount)}, you will receive ${formatPrice(task.sellPrice * task.item.amount)}.`);
+                            logDOM(`${padLeft} - ${itemNameWithAmount} 挂单价格 ${formatPrice(market.getPriceIncludingFees(task.sellPrice) * task.item.amount)}，你将获得 ${formatPrice(task.sellPrice * task.item.amount)}。`);
                             $(`#${task.item.appid}_${task.item.contextid}_${itemId}`).css('background', COLOR_SUCCESS);
 
                             totalPriceWithoutFeesOnMarket += task.sellPrice * task.item.amount;
@@ -1367,7 +1367,7 @@
                         }
 
                         if (message && isRetryMessage(message)) {
-                            logDOM(`${padLeft} - ${itemNameWithAmount} retrying listing because: ${message.charAt(0).toLowerCase()}${message.slice(1)}`);
+                            logDOM(`${padLeft} - ${itemNameWithAmount} 正在重试挂单，原因：${message.charAt(0).toLowerCase()}${message.slice(1)}`);
 
                             totalNumberOfProcessedQueueItems--;
                             sellQueue.unshift(task);
@@ -1379,7 +1379,7 @@
                             return;
                         }
 
-                        logDOM(`${padLeft} - ${itemNameWithAmount} not added to market${message ? ` because:  ${message.charAt(0).toLowerCase()}${message.slice(1)}` : '.'}`);
+                        logDOM(`${padLeft} - ${itemNameWithAmount} 未添加到市场${message ? `，原因： ${message.charAt(0).toLowerCase()}${message.slice(1)}` : '。'}`);
                         $(`#${task.item.appid}_${task.item.contextid}_${itemId}`).css('background', COLOR_ERROR);
 
                         callback();
@@ -1394,7 +1394,7 @@
         });
 
         function sellAllItems() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1415,7 +1415,7 @@
         }
 
         function sellAllDuplicateItems() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1439,7 +1439,7 @@
         }
 
         function gemAllDuplicateItems() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1478,13 +1478,13 @@
                 if (numberOfQueuedItems > 0) {
                     totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                    renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                    renderSpinner(`正在处理 ${numberOfQueuedItems} 个物品`);
                 }
             });
         }
 
         function sellAllCards() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1505,7 +1505,7 @@
         }
 
         function sellAllCrates() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1562,8 +1562,8 @@
                     const padLeft = `${padLeftZero(`${totalNumberOfProcessedQueueItems}`, digits)} / ${totalNumberOfQueuedItems}`;
 
                     if (err != ERROR_SUCCESS) {
-                        logConsole(`Failed to get gems value for ${itemName}`);
-                        logDOM(`${padLeft} - ${itemName} not turned into gems due to missing gems value.`);
+                        logConsole(`获取 ${itemName} 的宝石价值失败`);
+                        logDOM(`${padLeft} - ${itemName} 因为缺少宝石价值而未转化为宝石。`);
 
                         $(`#${item.appid}_${item.contextid}_${itemId}`).css('background', COLOR_ERROR);
                         return callback(false);
@@ -1575,8 +1575,8 @@
                         item,
                         (err) => {
                             if (err != ERROR_SUCCESS) {
-                                logConsole(`Failed to turn item into gems for ${itemName}`);
-                                logDOM(`${padLeft} - ${itemName} not turned into gems due to unknown error.`);
+                                logConsole(`将物品转化为宝石时出错 ${itemName}`);
+                                logDOM(`${padLeft} - ${itemName} 因为未知错误未转化为宝石。`);
 
                                 $(`#${item.appid}_${item.contextid}_${itemId}`).css('background', COLOR_ERROR);
                                 return callback(false);
@@ -1584,8 +1584,8 @@
 
                             logConsole('============================');
                             logConsole(itemName);
-                            logConsole(`Turned into ${goo.goo_value} gems`);
-                            logDOM(`${padLeft} - ${itemName} turned into ${item.goo_value_expected} gems.`);
+                            logConsole(`转化为 ${goo.goo_value} 个宝石`);
+                            logDOM(`${padLeft} - ${itemName} 转化为 ${item.goo_value_expected} 个宝石。`);
                             $(`#${item.appid}_${item.contextid}_${itemId}`).css('background', COLOR_SUCCESS);
 
                             totalScrap += item.goo_value_expected;
@@ -1637,14 +1637,14 @@
                     const padLeft = `${padLeftZero(`${totalNumberOfProcessedQueueItems}`, digits)} / ${totalNumberOfQueuedItems}`;
 
                     if (err != ERROR_SUCCESS) {
-                        logConsole(`Failed to unpack booster pack ${itemName}`);
-                        logDOM(`${padLeft} - ${itemName} not unpacked.`);
+                        logConsole(`拆包加成包时出错 ${itemName}`);
+                        logDOM(`${padLeft} - ${itemName} 拆包失败。`);
 
                         $(`#${item.appid}_${item.contextid}_${itemId}`).css('background', COLOR_ERROR);
                         return callback(false);
                     }
 
-                    logDOM(`${padLeft} - ${itemName} unpacked.`);
+                    logDOM(`${padLeft} - ${itemName} 拆包成功。`);
                     $(`#${item.appid}_${item.contextid}_${itemId}`).css('background', COLOR_SUCCESS);
 
                     callback(true);
@@ -1657,7 +1657,7 @@
         function turnSelectedItemsIntoGems() {
             const ids = getSelectedItems();
 
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1697,14 +1697,14 @@
                 if (numberOfQueuedItems > 0) {
                     totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                    renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                    renderSpinner(`正在处理 ${numberOfQueuedItems} 个物品`);
                 }
             });
         }
 
         // Unpacks all booster packs.
         function unpackAllBoosterPacks() {
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1736,14 +1736,14 @@
                 });
 
                 if (numberOfQueuedItems === 0) {
-                    logDOM('No booster packs found in the inventory to unpack.');
+                    logDOM('库存中未找到可拆包的加成包。');
 
                     return;
                 }
 
                 totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                renderSpinner(`正在处理 ${numberOfQueuedItems} 个物品`);
             });
         }
 
@@ -1751,7 +1751,7 @@
         function unpackSelectedBoosterPacks() {
             const ids = getSelectedItems();
 
-            renderSpinner('Loading inventory items');
+            renderSpinner('正在加载库存物品');
 
             loadAllInventories().then(() => {
                 removeSpinner();
@@ -1787,7 +1787,7 @@
                 if (numberOfQueuedItems > 0) {
                     totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                    renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                    renderSpinner(`正在处理 ${numberOfQueuedItems} 个物品`);
                 }
             });
         }
@@ -1847,7 +1847,7 @@
 
         function sellItems(items) {
             if (items.length == 0) {
-                logDOM('These items cannot be added to the market...');
+                logDOM('这些物品无法上架到市场...');
 
                 return;
             }
@@ -1869,7 +1869,7 @@
             if (numberOfQueuedItems > 0) {
                 totalNumberOfQueuedItems += numberOfQueuedItems;
 
-                renderSpinner(`Processing ${numberOfQueuedItems} items`);
+                renderSpinner(`正在处理 ${numberOfQueuedItems} 个物品`);
             }
         }
 
@@ -1906,7 +1906,7 @@
                 true,
                 (err, history, cachedHistory) => {
                     if (err) {
-                        logConsole(`Failed to get price history for ${itemName}`);
+                        logConsole(`获取 ${itemName} 的价格历史失败`);
 
                         if (err != ERROR_SUCCESS) {
                             failed += 1;
@@ -1918,7 +1918,7 @@
                         true,
                         (err, histogram, cachedListings) => {
                             if (err) {
-                                logConsole(`Failed to get orders histogram for ${itemName}`);
+                                logConsole(`获取 ${itemName} 的订单直方图失败`);
 
                                 if (err != ERROR_SUCCESS) {
                                     failed += 1;
@@ -1941,7 +1941,7 @@
                             );
 
 
-                            logConsole(`Sell price: ${sellPrice / 100.0} (${market.getPriceIncludingFees(sellPrice) / 100.0})`);
+                            logConsole(`挂单价格: ${sellPrice / 100.0} (${market.getPriceIncludingFees(sellPrice) / 100.0})`);
 
                             sellQueue.push({
                                 item: item,
@@ -2127,11 +2127,11 @@
                     $('.sell_selected').show();
                     if (canSellSelectedItemsManually(items)) {
                         $('.sell_manual').show();
-                        $('.sell_manual > span').text(`Sell ${selectedItems}${selectedItems == 1 ? ' Item Manual' : ' Items Manual'}`);
+                        $('.sell_manual > span').text(`手动出售${selectedItems}${selectedItems == 1 ? '个物品' : '个物品'}`);
                     } else {
                         $('.sell_manual').hide();
                     }
-                    $('.sell_selected > span').text(`Sell ${selectedItems}${selectedItems == 1 ? ' Item' : ' Items'}`);
+                    $('.sell_selected > span').text(`出售${selectedItems}${selectedItems == 1 ? '个物品' : '个物品'}`);
                 }
             });
         }
@@ -2145,7 +2145,7 @@
                 } else {
                     $('.turn_into_gems').show();
                     $('.turn_into_gems > span').
-                        text(`Turn ${selectedItems}${selectedItems == 1 ? ' Item Into Gems' : ' Items Into Gems'}`);
+                        text(`转化${selectedItems}${selectedItems == 1 ? '个物品为宝石' : '个物品为宝石'}`);
                 }
             });
         }
@@ -2159,7 +2159,7 @@
                 } else {
                     $('.unpack_selected_booster_packs').show();
                     $('.unpack_selected_booster_packs > span').
-                        text(`Unpack ${selectedItems}${selectedItems == 1 ? ' Booster Pack' : ' Booster Packs'}`);
+                        text(`拆开${selectedItems}${selectedItems == 1 ? '个加成包' : '个加成包'}`);
                 }
             });
         }
@@ -2225,12 +2225,12 @@
             baseLink.hide();
 
             // Add market link to a button
-            ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${marketLink}"><span>View in Community Market</span></a></div>`);
+            ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${marketLink}"><span>在社区市场查看</span></a></div>`);
 
             const isBoosterPack = selectedItem.name.toLowerCase().endsWith('booster pack');
             if (isBoosterPack) {
                 const tradingCardsUrl = `/market/search?q=&category_753_Game%5B%5D=tag_app_${selectedItem.market_fee_app}&category_753_item_class%5B%5D=tag_item_class_2&appid=753`;
-                ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${tradingCardsUrl}"><span>View trading cards in Community Market</span></a></div>`);
+                ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${tradingCardsUrl}"><span>在社区市场查看交易卡</span></a></div>`);
             }
 
             if (getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) != 1) {
@@ -2247,7 +2247,7 @@
                 false,
                 (err, histogram) => {
                     if (err) {
-                        logConsole(`Failed to get orders histogram for ${selectedItem.name || selectedItem.description.name}`);
+                        logConsole(`获取 ${selectedItem.name || selectedItem.description.name} 的订单直方图失败`);
                         return;
                     }
 
@@ -2258,11 +2258,11 @@
 
                     const groupMain = $(`<div id="listings_group">
                         <div>
-                            <div id="listings_sell">Sell</div>
+                            <div id="listings_sell">出售</div>
                             ${histogram.sell_order_table}
                         </div>
                         <div>
-                            <div id="listings_buy">Buy</div>
+                            <div id="listings_buy">购买</div>
                             ${histogram.buy_order_table}
                         </div>
                     </div>`);
@@ -2303,7 +2303,7 @@
                         <input id="quick_sell_input" style="background-color: black;color: white;border: transparent;max-width:65px;text-align:center;" type="number" value="${histogram.lowest_sell_order / 100}" step="0.01" />&nbsp;
                         <a class="item_market_action_button item_market_action_button_green quick_sell_custom">
                             <span class="item_market_action_button_edge item_market_action_button_left"></span>
-                            <span class="item_market_action_button_contents">➜ Sell</span>
+                            <span class="item_market_action_button_contents">➜ 出售</span>
                             <span class="item_market_action_button_edge item_market_action_button_right"></span>
                             <span class="item_market_action_button_preload"></span>
                         </a>
@@ -2351,7 +2351,7 @@
 
             $('#see_settings').remove();
             $('#global_action_menu').
-                prepend('<span id="see_settings"><a href="javascript:void(0)">⬖ Steam Economy Enhancer</a></span>');
+                prepend('<span id="see_settings"><a href="javascript:void(0)">⬖ Steam经济增强器</a></span>');
             $('#see_settings').on('click', '*', () => openSettings());
 
             const appId = getActiveInventory().m_appid;
@@ -2359,30 +2359,30 @@
             const TF2 = appId == 440;
 
             let buttonsHtml = `
-                <a class="btn_green_white_innerfade btn_medium_wide sell_all"><span>Sell All Items</span></a>
-                <a class="btn_green_white_innerfade btn_medium_wide sell_all_duplicates"><span>Sell All Duplicate Items</span></a>
-                <a class="btn_green_white_innerfade btn_medium_wide sell_selected" style="display:none"><span>Sell Selected Items</span></a>
-                <a class="btn_green_white_innerfade btn_medium_wide sell_manual" style="display:none"><span>Sell Manually</span></a>
+                <a class="btn_green_white_innerfade btn_medium_wide sell_all"><span>出售所有物品</span></a>
+                <a class="btn_green_white_innerfade btn_medium_wide sell_all_duplicates"><span>出售所有重复物品</span></a>
+                <a class="btn_green_white_innerfade btn_medium_wide sell_selected" style="display:none"><span>出售选中物品</span></a>
+                <a class="btn_green_white_innerfade btn_medium_wide sell_manual" style="display:none"><span>手动出售</span></a>
             `;
 
             if (showMiscOptions) {
                 buttonsHtml += `
-                    <a class="btn_green_white_innerfade btn_medium_wide sell_all_cards"><span>Sell All Cards</span></a>
+                    <a class="btn_green_white_innerfade btn_medium_wide sell_all_cards"><span>出售所有卡牌</span></a>
                     <div class="see_inventory_buttons">
-                        <a class="btn_darkblue_white_innerfade btn_medium_wide turn_into_gems" style="display:none"><span>Turn Selected Items Into Gems</span></a>
-                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_all_booster_packs"><span>Unpack All Booster Packs</span></a>
-                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_selected_booster_packs" style="display:none"><span>Unpack Selected Booster Packs</span></a>
-                        <a class="btn_darkblue_white_innerfade btn_medium_wide gem_all_duplicates"><span>Turn All Duplicate Items Into Gems</span></a>
+                        <a class="btn_darkblue_white_innerfade btn_medium_wide turn_into_gems" style="display:none"><span>转化选中物品为宝石</span></a>
+                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_all_booster_packs"><span>拆开所有加成包</span></a>
+                        <a class="btn_darkblue_white_innerfade btn_medium_wide unpack_selected_booster_packs" style="display:none"><span>拆开选中加成包</span></a>
+                        <a class="btn_darkblue_white_innerfade btn_medium_wide gem_all_duplicates"><span>转化所有重复物品为宝石</span></a>
                     </div>
                 `;
             } else if (TF2) {
-                buttonsHtml += '<a class="btn_green_white_innerfade btn_medium_wide sell_all_crates"><span>Sell All Crates</span></a>';
+                buttonsHtml += '<a class="btn_green_white_innerfade btn_medium_wide sell_all_crates"><span>出售所有箱子</span></a>';
             }
 
             const sellButtons = $(`<div id="inventory_sell_buttons" class="see_inventory_buttons">${buttonsHtml}</div>`);
 
             const reloadButton =
-                $('<a id="inventory_reload_button" class="btn_darkblue_white_innerfade btn_medium_wide reload_inventory" style="margin-right:12px"><span>Reload Inventory</span></a>');
+                $('<a id="inventory_reload_button" class="btn_darkblue_white_innerfade btn_medium_wide reload_inventory" style="margin-right:12px"><span>刷新库存</span></a>');
 
             const logo = $('#inventory_logos')[0];
             logo.style.height = 'auto';
@@ -2564,7 +2564,7 @@
                 true,
                 (err, histogram, cachedListings) => {
                     if (err) {
-                        logConsole(`Failed to get orders histogram for ${itemName}`);
+                        logConsole(`获取 ${itemName} 的订单直方图失败`);
 
                         if (err != ERROR_SUCCESS) {
                             failed += 1;
@@ -2694,7 +2694,7 @@
 
             let listingUI = getListingFromLists(listing.listingid);
             if (listingUI == null) {
-                logConsole(`Listing ${listing.listingid} not found in the lists, skipping.`);
+                logConsole(`列表 ${listing.listingid} 在列表中未找到，跳过该操作。`);
 
                 callback(true, true);
 
@@ -2708,7 +2708,7 @@
 
             if (price <= getSettingWithDefault(SETTING_PRICE_MIN_CHECK_PRICE) * 100 || listingUI.hasClass('removing')) {
                 $('.market_listing_my_price', listingUI).last().css('background', COLOR_PRICE_NOT_CHECKED);
-                $('.market_listing_my_price', listingUI).last().prop('title', 'The price is not checked.');
+                $('.market_listing_my_price', listingUI).last().prop('title', '该价格未被检查。');
                 listingUI.addClass('not_checked');
 
                 return callback(true, true);
@@ -2729,7 +2729,7 @@
                 true,
                 (errorPriceHistory, history, cachedHistory) => {
                     if (errorPriceHistory) {
-                        logConsole(`Failed to get price history for ${game_name}`);
+                        logConsole(`获取 ${game_name} 的价格历史失败`);
 
                         if (errorPriceHistory != ERROR_SUCCESS) {
                             failed += 1;
@@ -2741,7 +2741,7 @@
                         true,
                         (errorHistogram, histogram, cachedListings) => {
                             if (errorHistogram) {
-                                logConsole(`Failed to get orders histogram for ${game_name}`);
+                                logConsole(`获取 ${game_name} 的订单直方图失败`);
 
                                 if (errorHistogram != ERROR_SUCCESS) {
                                     failed += 1;
@@ -2760,13 +2760,13 @@
                             $(
                                 '.market_table_value > span:nth-child(1) > span:nth-child(1) > span:nth-child(1)',
                                 listingUI
-                            ).append(` ➤ <span title="This is likely the highest buy order price.">${highestBuyOrderPrice
+                            ).append(` ➤ <span title="这可能是最高的买单价格。">${highestBuyOrderPrice
                                 }</span>`);
 
                             logConsole('============================');
                             logConsole(JSON.stringify(listing));
                             logConsole(`${game_name}: ${asset.name}`);
-                            logConsole(`Current price: ${price / 100.0}`);
+                            logConsole(`当前价格: ${price / 100.0}`);
 
                             // Calculate two prices here, one without the offset and one with the offset.
                             // The price without the offset is required to not relist the item constantly when you have the lowest price (i.e., with a negative offset).
@@ -2789,17 +2789,17 @@
 
                             const sellPriceWithoutOffsetWithFees = market.getPriceIncludingFees(sellPriceWithoutOffset);
 
-                            logConsole(`Calculated price: ${sellPriceWithoutOffsetWithFees / 100.0} (${sellPriceWithoutOffset / 100.0})`);
+                            logConsole(`计算得出的价格: ${sellPriceWithoutOffsetWithFees / 100.0} (${sellPriceWithoutOffset / 100.0})`);
 
                             listingUI.addClass(`price_${sellPriceWithOffset}`);
 
                             $('.market_listing_my_price', listingUI).last().prop(
                                 'title',
-                                `The best price is ${formatPrice(sellPriceWithoutOffsetWithFees)}.`
+                                `最佳价格为 ${formatPrice(sellPriceWithoutOffsetWithFees)}。`
                             );
 
                             if (sellPriceWithoutOffsetWithFees < price) {
-                                logConsole('Sell price is too high.');
+                                logConsole('挂单价格过高。');
 
                                 $('.market_listing_my_price', listingUI).last().
                                     css('background', COLOR_PRICE_EXPENSIVE);
@@ -2809,12 +2809,12 @@
                                     queueOverpricedItemListing(listing.listingid);
                                 }
                             } else if (sellPriceWithoutOffsetWithFees > price) {
-                                logConsole('Sell price is too low.');
+                                logConsole('挂单价格过低。');
 
                                 $('.market_listing_my_price', listingUI).last().css('background', COLOR_PRICE_CHEAP);
                                 listingUI.addClass('underpriced');
                             } else {
-                                logConsole('Sell price is fair.');
+                                logConsole('挂单价格合理。');
 
                                 $('.market_listing_my_price', listingUI).last().css('background', COLOR_PRICE_FAIR);
                                 listingUI.addClass('fair');
@@ -2852,7 +2852,7 @@
         function marketOverpricedQueueWorker(item, ignoreErrors, callback) {
             let listingUI = getListingFromLists(item.listing)
             if (listingUI == null) {
-                logConsole(`Listing ${item.listing} not found in the lists, skipping.`);
+                logConsole(`列表 ${item.listing} 在列表中未找到，跳过该操作。`);
 
                 callback(true);
 
@@ -3131,7 +3131,7 @@
                     const assetInfo = getAssetInfoFromListingId(listingid);
 
                     if (assetInfo.appid === undefined) {
-                        logConsole(`Skipping listing ${listingid} (appid not found)`);
+                        logConsole(`跳过列表 ${listingid} （未找到 appid）`);
                         return;
                     }
 
@@ -3159,7 +3159,7 @@
                     const assetInfo = getAssetInfoFromBuyOrderId(listingid);
 
                     if (assetInfo.amount === undefined) {
-                        logConsole(`Skipping listing ${listingid} (amount not found)`);
+                        logConsole(`跳过列表 ${listingid} （未找到数量）`);
                         return;
                     }
 
@@ -3172,7 +3172,7 @@
                     return;
                 }
 
-                logConsole(`Skipping item ${item.elm.id} (not a buy or sell order)`);
+                logConsole(`跳过物品 ${item.elm.id} （不是买单或卖单）`);
             });
 
             if (totalSellOrderAmount > 0) {
@@ -3239,7 +3239,7 @@
             market_listing_see.addClass('list');
 
             $('.market_listing_table_header', market_listing_see.parent()).
-                append('<input class="search" id="market_name_search" placeholder="Search..." />');
+                append('<input class="search" id="market_name_search" placeholder="搜索..." />');
 
             const options = {
                 valueNames: [
@@ -3307,7 +3307,7 @@
                 $('.market_pagesize_options').hide();
 
                 // Show the spinner so the user knows that something is going on.
-                renderSpinner('Loading market listings');
+                renderSpinner('正在加载市场挂单');
 
                 while (currentCount < totalCount) {
                     marketListingsItemsQueue.push(currentCount);
@@ -3368,7 +3368,7 @@
                 if ($('.market_select_item', selectionGroup).length == 0) { // If there are no items to select, keep it at Select all.
                     invert = false;
                 }
-                $('.select_all > span', selectionGroup).text(invert ? 'Deselect all' : 'Select all');
+                $('.select_all > span', selectionGroup).text(invert ? '取消全选' : '全选');
             });
         }
 
@@ -3376,7 +3376,7 @@
         function sortMarketListings(elem, isPrice, isDateOrQuantity, isName) {
             const list = getListFromContainer(elem);
             if (list == null) {
-                logConsole('Invalid parameter, could not find a list matching elem.');
+                logConsole('无效参数，无法找到与 elem 匹配的列表。');
                 return;
             }
 
@@ -3536,35 +3536,35 @@
             // Sell orders.
             $('.my_market_header').first().append(`<div class="market_listing_buttons">
                 <a class="item_market_action_button item_market_action_button_green select_all market_listing_button">
-                    <span class="item_market_action_button_contents">Select all</span>
+                    <span class="item_market_action_button_contents">全选</span>
                 </a>
                 <a class="item_market_action_button item_market_action_button_green select_five_from_page market_listing_button">
-                    <span class="item_market_action_button_contents">Select 5</span>
+                    <span class="item_market_action_button_contents">选中5个</span>
                 </a>
                 <a class="item_market_action_button item_market_action_button_green select_twentyfive_from_page market_listing_button">
-                    <span class="item_market_action_button_contents">Select 25</span>
+                    <span class="item_market_action_button_contents">选中25个</span>
                 </a>
                 <a class="item_market_action_button item_market_action_button_green remove_selected market_listing_button">
-                    <span class="item_market_action_button_contents">Remove selected</span>
+                    <span class="item_market_action_button_contents">移除选中</span>
                 </a>
                 <a class="item_market_action_button item_market_action_button_green relist_selected market_listing_button" style="margin-left:auto">
-                    <span class="item_market_action_button_contents">Relist selected</span>
+                    <span class="item_market_action_button_contents">重新上架选中</span>
                 </a>
                 <a class="item_market_action_button item_market_action_button_green relist_overpriced market_listing_button">
-                    <span class="item_market_action_button_contents">Relist overpriced</span>
+                    <span class="item_market_action_button_contents">重新上架高价</span>
                 </a>
                 <a class="item_market_action_button item_market_action_button_green select_overpriced market_listing_button">
-                    <span class="item_market_action_button_contents">Select overpriced</span>
+                    <span class="item_market_action_button_contents">选中高价</span>
                 </a>
             </div>`);
 
             // Listings confirmations and buy orders.
             $('.my_market_header').slice(1).append(`<div class="market_listing_buttons">
                 <a class="item_market_action_button item_market_action_button_green select_all market_listing_button">
-                    <span class="item_market_action_button_contents">Select all</span>
+                    <span class="item_market_action_button_contents">全选</span>
                 </a>
                 <a class="item_market_action_button item_market_action_button_green remove_selected market_listing_button">
-                    <span class="item_market_action_button_contents">Remove selected</span>
+                    <span class="item_market_action_button_contents">移除选中</span>
                 </a>
             </div>`);
 
@@ -3722,7 +3722,7 @@
             });
 
             $('#see_settings').remove();
-            $('#global_action_menu').prepend('<span id="see_settings"><a href="javascript:void(0)">⬖ Steam Economy Enhancer</a></span>');
+            $('#global_action_menu').prepend('<span id="see_settings"><a href="javascript:void(0)">⬖ Steam经济增强器</a></span>');
             $('#see_settings').on('click', '*', () => openSettings());
 
             processMarketListings();
@@ -3808,7 +3808,7 @@
                         text += ` (${rgItem.type})`;
                     }
                 } else {
-                    text = 'Unknown Item';
+                    text = '未知物品';
                 }
 
                 if (text in total) {
@@ -3830,13 +3830,13 @@
                 return a[1] - b[1];
             }).reverse();
 
-            let totalText = `<strong>Number of unique items: ${sortable.length}, worth ${formatPrice(totalPrice)}<br/><br/></strong>`;
+            let totalText = `<strong>唯一物品数量: ${sortable.length}, 总价值 ${formatPrice(totalPrice)}<br/><br/></strong>`;
             let totalNumOfItems = 0;
             for (let i = 0; i < sortable.length; i++) {
                 totalText += `${sortable[i][1]}x ${sortable[i][0]}<br/>`;
                 totalNumOfItems += sortable[i][1];
             }
-            totalText += `<br/><strong>Total items: ${totalNumOfItems}</strong><br/>`;
+            totalText += `<br/><strong>物品总数: ${totalNumOfItems}</strong><br/>`;
 
             return totalText;
         }
@@ -3919,7 +3919,7 @@
         const appendSelectPageButton = () => {
             $('#inventory_displaycontrols').append(`<div class="trade_offer_buttons">
               <a class="item_market_action_button item_market_action_button_green select_all">
-                  <span class="item_market_action_button_contents" style="text-transform:none">Select all from page</span>
+                  <span class="item_market_action_button_contents" style="text-transform:none">从页面中全选</span>
               </a>
           </div>`);
 
@@ -3953,245 +3953,175 @@
     //#region Settings
     function openSettings() {
         const price_options = $(`<div id="see_settings_modal">
-            <div>
-                Calculate prices as the:&nbsp;
-                <select id="${SETTING_PRICE_ALGORITHM}">
-                    <option value="1"${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 1 ? 'selected="selected"' : ''}>Maximum of the average history and lowest sell listing</option>
-                    <option value="2" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 2 ? 'selected="selected"' : ''}>Lowest sell listing</option>
-                    <option value="3" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 3 ? 'selected="selected"' : ''}>Highest current buy order or lowest sell listing</option>
-                </select>
-            </div>
-            <div style="margin-top:6px;">
-                Hours to use for the average history calculated price:&nbsp;
-                <input type="number" min="0" step="2" id="${SETTING_PRICE_HISTORY_HOURS}" value=${getSettingWithDefault(SETTING_PRICE_HISTORY_HOURS)}>
-            </div>
-            <div style="margin-top:6px;">
-                The value to add to the calculated price (minimum and maximum are respected):&nbsp;
-                <input type="number" step="0.01" id="${SETTING_PRICE_OFFSET}" value=${getSettingWithDefault(SETTING_PRICE_OFFSET)}>
-            </div>
-            <div style="margin-top:6px">
-                Use the second lowest sell listing when the lowest sell listing has a low quantity:&nbsp;
-                <input type="checkbox" id="${SETTING_PRICE_IGNORE_LOWEST_Q}" ${getSettingWithDefault(SETTING_PRICE_IGNORE_LOWEST_Q) == 1 ? 'checked' : ''}>
-            </div>
-            <div style="margin-top:6px;">
-                Don't check market listings with prices of and below:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_PRICE_MIN_CHECK_PRICE}" value=${getSettingWithDefault(SETTING_PRICE_MIN_CHECK_PRICE)}>
-            </div>
-            <div style="margin-top:6px;">
-                Don't list market listings with prices of and below:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_PRICE_MIN_LIST_PRICE}" value=${getSettingWithDefault(SETTING_PRICE_MIN_LIST_PRICE)}>
-            </div>
-            <div style="margin-top:24px">
-                Show price labels in inventory:&nbsp;
-                <input type="checkbox" id="${SETTING_INVENTORY_PRICE_LABELS}" ${getSettingWithDefault(SETTING_INVENTORY_PRICE_LABELS) == 1 ? 'checked' : ''}>
-            </div>
-            <div style="margin-top:6px">
-                Show price labels in trade offers:&nbsp;
-                <input type="checkbox" id="${SETTING_TRADEOFFER_PRICE_LABELS}" ${getSettingWithDefault(SETTING_TRADEOFFER_PRICE_LABELS) == 1 ? 'checked' : ''}>
-            </div>
-            <div style="margin-top:6px">
-                Show quick sell info and buttons:&nbsp;
-                <input type="checkbox" id="${SETTING_QUICK_SELL_BUTTONS}" ${getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) == 1 ? 'checked' : ''}>
-            </div>
-            <div style="margin-top:24px;">
-                Minimum:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_MIN_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_NORMAL_PRICE)}>
-                &nbsp;and maximum:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_MAX_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_NORMAL_PRICE)}>
-                &nbsp;price for normal cards
-            </div>
-            <div style="margin-top:6px;">
-                Minimum:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_MIN_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_FOIL_PRICE)}>
-                &nbsp;and maximum:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_MAX_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_FOIL_PRICE)}>
-                &nbsp;price for foil cards
-            </div>
-            <div style="margin-top:6px;">
-                Minimum:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_MIN_MISC_PRICE}" value=${getSettingWithDefault(SETTING_MIN_MISC_PRICE)}>
-                &nbsp;and maximum:&nbsp;
-                <input type="number" step="0.01" id="${SETTING_MAX_MISC_PRICE}" value=${getSettingWithDefault(SETTING_MAX_MISC_PRICE)}>
-                &nbsp;price for other items
-            </div>
-            <div style="margin-top:6px;">
-                Automatically relist overpriced market listings (slow on large inventories):&nbsp;
-                <input id="${SETTING_RELIST_AUTOMATICALLY}" class="market_relist_auto" type="checkbox" ${getSettingWithDefault(SETTING_RELIST_AUTOMATICALLY) == 1 ? 'checked' : ''}>
-            </div>
-        </div>`);
+        <div>
+            计算价格方式：&nbsp;
+            <select id="${SETTING_PRICE_ALGORITHM}">
+                <option value="1"${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 1 ? 'selected="selected"' : ''}>历史均价与最低卖单的最大值</option>
+                <option value="2" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 2 ? 'selected="selected"' : ''}>最低卖单</option>
+                <option value="3" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 3 ? 'selected="selected"' : ''}>最高买单或最低卖单</option>
+            </select>
+        </div>
+        <div style="margin-top:6px;">
+            用于均价计算的历史小时数：&nbsp;
+            <input type="number" min="0" step="2" id="${SETTING_PRICE_HISTORY_HOURS}" value=${getSettingWithDefault(SETTING_PRICE_HISTORY_HOURS)}>
+        </div>
+        <div style="margin-top:6px;">
+            计算价格时加上的偏移值（会遵循最小最大值）：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_PRICE_OFFSET}" value=${getSettingWithDefault(SETTING_PRICE_OFFSET)}>
+        </div>
+        <div style="margin-top:6px">
+            当最低卖单数量较少时使用第二低卖单：&nbsp;
+            <input type="checkbox" id="${SETTING_PRICE_IGNORE_LOWEST_Q}" ${getSettingWithDefault(SETTING_PRICE_IGNORE_LOWEST_Q) == 1 ? 'checked' : ''}>
+        </div>
+        <div style="margin-top:6px;">
+            不检查价格低于及等于此值的市场挂单：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_PRICE_MIN_CHECK_PRICE}" value=${getSettingWithDefault(SETTING_PRICE_MIN_CHECK_PRICE)}>
+        </div>
+        <div style="margin-top:6px;">
+            不挂单价格低于及等于此值的物品：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_PRICE_MIN_LIST_PRICE}" value=${getSettingWithDefault(SETTING_PRICE_MIN_LIST_PRICE)}>
+        </div>
+        <div style="margin-top:24px">
+            库存显示价格标签：&nbsp;
+            <input type="checkbox" id="${SETTING_INVENTORY_PRICE_LABELS}" ${getSettingWithDefault(SETTING_INVENTORY_PRICE_LABELS) == 1 ? 'checked' : ''}>
+        </div>
+        <div style="margin-top:6px">
+            交易报价显示价格标签：&nbsp;
+            <input type="checkbox" id="${SETTING_TRADEOFFER_PRICE_LABELS}" ${getSettingWithDefault(SETTING_TRADEOFFER_PRICE_LABELS) == 1 ? 'checked' : ''}>
+        </div>
+        <div style="margin-top:6px">
+            显示快速出售信息和按钮：&nbsp;
+            <input type="checkbox" id="${SETTING_QUICK_SELL_BUTTONS}" ${getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) == 1 ? 'checked' : ''}>
+        </div>
+        <div style="margin-top:24px;">
+            普通卡牌最小：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_MIN_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_NORMAL_PRICE)}>
+            &nbsp;最大：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_MAX_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_NORMAL_PRICE)}>
+            &nbsp;价格
+        </div>
+        <div style="margin-top:6px;">
+            箔卡最小：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_MIN_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_FOIL_PRICE)}>
+            &nbsp;最大：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_MAX_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_FOIL_PRICE)}>
+            &nbsp;价格
+        </div>
+        <div style="margin-top:6px;">
+            其他物品最小：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_MIN_MISC_PRICE}" value=${getSettingWithDefault(SETTING_MIN_MISC_PRICE)}>
+            &nbsp;最大：&nbsp;
+            <input type="number" step="0.01" id="${SETTING_MAX_MISC_PRICE}" value=${getSettingWithDefault(SETTING_MAX_MISC_PRICE)}>
+            &nbsp;价格
+        </div>
+        <div style="margin-top:6px;">
+            自动重新上架高价市场挂单（库存大时较慢）：&nbsp;
+            <input id="${SETTING_RELIST_AUTOMATICALLY}" class="market_relist_auto" type="checkbox" ${getSettingWithDefault(SETTING_RELIST_AUTOMATICALLY) == 1 ? 'checked' : ''}>
+        </div>
+    </div>`);
+    unsafeWindow.ShowConfirmDialog('Steam经济增强器', price_options).done(() => {
+        setSetting(SETTING_MIN_NORMAL_PRICE, $(`#${SETTING_MIN_NORMAL_PRICE}`, price_options).val());
+        setSetting(SETTING_MAX_NORMAL_PRICE, $(`#${SETTING_MAX_NORMAL_PRICE}`, price_options).val());
+        setSetting(SETTING_MIN_FOIL_PRICE, $(`#${SETTING_MIN_FOIL_PRICE}`, price_options).val());
+        setSetting(SETTING_MAX_FOIL_PRICE, $(`#${SETTING_MAX_FOIL_PRICE}`, price_options).val());
+        setSetting(SETTING_MIN_MISC_PRICE, $(`#${SETTING_MIN_MISC_PRICE}`, price_options).val());
+        setSetting(SETTING_MAX_MISC_PRICE, $(`#${SETTING_MAX_MISC_PRICE}`, price_options).val());
+        setSetting(SETTING_PRICE_OFFSET, $(`#${SETTING_PRICE_OFFSET}`, price_options).val());
+        setSetting(SETTING_PRICE_MIN_CHECK_PRICE, $(`#${SETTING_PRICE_MIN_CHECK_PRICE}`, price_options).val());
+        setSetting(SETTING_PRICE_MIN_LIST_PRICE, $(`#${SETTING_PRICE_MIN_LIST_PRICE}`, price_options).val())
+        setSetting(SETTING_PRICE_ALGORITHM, $(`#${SETTING_PRICE_ALGORITHM}`, price_options).val());
+        setSetting(SETTING_PRICE_IGNORE_LOWEST_Q, $(`#${SETTING_PRICE_IGNORE_LOWEST_Q}`, price_options).prop('checked') ? 1 : 0);
+        setSetting(SETTING_PRICE_HISTORY_HOURS, $(`#${SETTING_PRICE_HISTORY_HOURS}`, price_options).val());
+        setSetting(SETTING_RELIST_AUTOMATICALLY, $(`#${SETTING_RELIST_AUTOMATICALLY}`, price_options).prop('checked') ? 1 : 0);
+        setSetting(SETTING_INVENTORY_PRICE_LABELS, $(`#${SETTING_INVENTORY_PRICE_LABELS}`, price_options).prop('checked') ? 1 : 0);
+        setSetting(SETTING_TRADEOFFER_PRICE_LABELS, $(`#${SETTING_TRADEOFFER_PRICE_LABELS}`, price_options).prop('checked') ? 1 : 0);
+        setSetting(SETTING_QUICK_SELL_BUTTONS, $(`#${SETTING_QUICK_SELL_BUTTONS}`, price_options).prop('checked') ? 1 : 0);
 
-        unsafeWindow.ShowConfirmDialog('Steam Economy Enhancer', price_options).done(() => {
-            setSetting(SETTING_MIN_NORMAL_PRICE, $(`#${SETTING_MIN_NORMAL_PRICE}`, price_options).val());
-            setSetting(SETTING_MAX_NORMAL_PRICE, $(`#${SETTING_MAX_NORMAL_PRICE}`, price_options).val());
-            setSetting(SETTING_MIN_FOIL_PRICE, $(`#${SETTING_MIN_FOIL_PRICE}`, price_options).val());
-            setSetting(SETTING_MAX_FOIL_PRICE, $(`#${SETTING_MAX_FOIL_PRICE}`, price_options).val());
-            setSetting(SETTING_MIN_MISC_PRICE, $(`#${SETTING_MIN_MISC_PRICE}`, price_options).val());
-            setSetting(SETTING_MAX_MISC_PRICE, $(`#${SETTING_MAX_MISC_PRICE}`, price_options).val());
-            setSetting(SETTING_PRICE_OFFSET, $(`#${SETTING_PRICE_OFFSET}`, price_options).val());
-            setSetting(SETTING_PRICE_MIN_CHECK_PRICE, $(`#${SETTING_PRICE_MIN_CHECK_PRICE}`, price_options).val());
-            setSetting(SETTING_PRICE_MIN_LIST_PRICE, $(`#${SETTING_PRICE_MIN_LIST_PRICE}`, price_options).val())
-            setSetting(SETTING_PRICE_ALGORITHM, $(`#${SETTING_PRICE_ALGORITHM}`, price_options).val());
-            setSetting(SETTING_PRICE_IGNORE_LOWEST_Q, $(`#${SETTING_PRICE_IGNORE_LOWEST_Q}`, price_options).prop('checked') ? 1 : 0);
-            setSetting(SETTING_PRICE_HISTORY_HOURS, $(`#${SETTING_PRICE_HISTORY_HOURS}`, price_options).val());
-            setSetting(SETTING_RELIST_AUTOMATICALLY, $(`#${SETTING_RELIST_AUTOMATICALLY}`, price_options).prop('checked') ? 1 : 0);
-            setSetting(SETTING_INVENTORY_PRICE_LABELS, $(`#${SETTING_INVENTORY_PRICE_LABELS}`, price_options).prop('checked') ? 1 : 0);
-            setSetting(SETTING_TRADEOFFER_PRICE_LABELS, $(`#${SETTING_TRADEOFFER_PRICE_LABELS}`, price_options).prop('checked') ? 1 : 0);
-            setSetting(SETTING_QUICK_SELL_BUTTONS, $(`#${SETTING_QUICK_SELL_BUTTONS}`, price_options).prop('checked') ? 1 : 0);
-
-            window.location.reload();
-        });
-    }
-    //#endregion
-
-    //#region UI
-    injectCss(`
-        .ui-selected { outline: 2px dashed #FFFFFF; }
-        #logger { color: #767676; font-size: 12px;margin-top:16px; max-height: 200px; overflow-y: auto; }
-        .trade_offer_sum { color: #767676; font-size: 12px; margin-top:8px; user-select: text; }
-        .trade_offer_buttons { margin-top: 12px; }
-        .market_commodity_orders_table { font-size:12px; font-family: "Motiva Sans", Sans-serif; font-weight: 300; }
-        .market_commodity_orders_table th { padding-left: 10px; }
-        #listings_group { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        #listings_sell { text-align: right; color: #589328; font-weight:600; }
-        #listings_buy { text-align: right; color: #589328; font-weight:600; }
-        .market_listing_my_price { height: 50px; padding-right:6px; }
-        .market_listing_edit_buttons.actual_content { width:276px; transition-property: background-color, border-color; transition-timing-function: linear; transition-duration: 0.5s;}
-        .market_listing_buttons { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; padding: 5px; background: rgba(0, 0, 0, 0.4); }
-        .market_listing_label_right { float:right; font-size:12px; margin-top:1px; }
-        .market_listing_select { position: absolute; top: 16px;right: 10px; display: flex; }
-        #market_listing_relist { vertical-align: middle; position: relative; bottom: -1px; right: 2px; }
-        .pick_and_sell_button > a { vertical-align: middle; }
-        .market_relist_auto { margin-bottom: 8px;  }
-        .market_relist_auto_label { margin-right: 6px; }
-        .quick_sell { margin-right: 4px; }
-
-        .spinner {margin:10px auto;width:50px;height:40px;text-align:center;font-size:10px;}
-        .spinner > div {background-color:#ccc;height:100%;width:6px;display:inline-block;animation:sk-stretchdelay 1.2s infinite ease-in-out}
-        .spinner .rect2 {animation-delay:-1.1s}
-        .spinner .rect3 {animation-delay:-1s}
-        .spinner .rect4 {animation-delay:-.9s}
-        .spinner .rect5 {animation-delay:-.8s}
-        @keyframes sk-stretchdelay {
-            0%,40%,100% {transform:scaleY(0.4);}
-            20% {transform:scaleY(1.0);}
-        }
-
-        #market_name_search { float: right; background: rgba(0, 0, 0, 0.25); color: white; border: none;height: 25px; padding-left: 6px;}
-        .price_option_price { width: 100px }
-        .inventory_item_price { top: 0px;position: absolute;right: 0;background: #3571a5;padding: 2px;color: white; font-size:11px; border: 1px solid #666666;}
-
-        .see_inventory_buttons {display:flex;flex-wrap:wrap;gap:10px;align-items:start;}
-        .see_inventory_buttons > .see_inventory_buttons, .see_inventory_buttons > #inventory_items_spinner {flex-basis: 100%;}
-        #see_market_progress { display: block; width: 50%; height: 20px; }
-        #see_market_progress[hidden] { visibility: hidden; }
-
-        #see_settings { background: #26566c; margin-right: 10px; height: 24px; line-height:24px; display:inline-block; padding: 0px 6px; }
-        #see_settings_modal select, #see_settings_modal input[type="number"] { background-color: black; color: white; border: transparent; padding: 4px 8px; }
-        #see_settings_modal input[type="number"] { width: 100px; }
-        #see_settings_modal input[type="checkbox"] { width: 16px; height: 16px; vertical-align: middle; accent-color: #000; }
-    `);
-
-    $(document).ready(() => {
-        // Make sure the user is logged in, there's not much we can do otherwise.
-        if (!isLoggedIn) {
-            return;
-        }
-
-        if (currentPage == PAGE_INVENTORY) {
-            initializeInventoryUI();
-        }
-
-        if (currentPage == PAGE_MARKET || currentPage == PAGE_MARKET_LISTING) {
-            initializeMarketUI();
-        }
-
-        if (currentPage == PAGE_TRADEOFFER) {
-            initializeTradeOfferUI();
-        }
+        window.location.reload();
     });
+}
+// ...existing code...
+function injectCss(css) {
+    const head = document.getElementsByTagName('head')[0];
+    if (!head) {
+        return;
+    }
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = css;
+    head.appendChild(style);
+}
 
-    function injectCss(css) {
-        const head = document.getElementsByTagName('head')[0];
-        if (!head) {
-            return;
-        }
-        const style = document.createElement('style');
-        style.type = 'text/css';
-        style.innerHTML = css;
-        head.appendChild(style);
+function renderSpinner(text) {
+    const { container, spinnerid } = getSpinnerContext();
+    if (container == null || spinnerid == null) {
+        return;
     }
 
-    function renderSpinner(text) {
-        const { container, spinnerid } = getSpinnerContext();
-        if (container == null || spinnerid == null) {
-            return;
-        }
+    text = (text || '').trim();
+    removeSpinner();
+    container.append(`
+        <div id="${spinnerid}">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
+            </div>
+            ${text ? `<div style="text-align:center">${text}</div>` : ''}
+        </div>`);
+}
 
-        text = (text || '').trim();
-        removeSpinner();
-
-        container.append(`
-            <div id="${spinnerid}">
-                <div class="spinner">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                </div>
-                ${text ? `<div style="text-align:center">${text}</div>` : ''}
-            </div>`);
+function removeSpinner() {
+    const { container, spinnerid } = getSpinnerContext();
+    if (container == null || spinnerid == null) {
+        return;
     }
 
-    function removeSpinner() {
-        const { container, spinnerid } = getSpinnerContext();
-        if (container == null || spinnerid == null) {
-            return;
-        }
+    $(`#${spinnerid}`, container).remove();
+}
 
-        $(`#${spinnerid}`, container).remove();
+function getSpinnerContext() {
+    let container = null;
+    let spinnerid = null;
+
+    switch (currentPage) {
+        case PAGE_MARKET:
+            container = $('.my_market_header').eq(0);
+            spinnerid = 'market_listings_spinner';
+            break;
+        case PAGE_INVENTORY:
+            container = $('#inventory_sell_buttons');
+            spinnerid = 'inventory_items_spinner';
+            break;
+        default:
+            break;
     }
 
-    function getSpinnerContext() {
-        let container = null;
-        let spinnerid = null;
+    container = container && container.length > 0 ? container : null;
+    return { container, spinnerid };
+}
 
-        switch (currentPage) {
-            case PAGE_MARKET:
-                container = $('.my_market_header').eq(0);
-                spinnerid = 'market_listings_spinner';
-                break;
-            case PAGE_INVENTORY:
-                container = $('#inventory_sell_buttons');
-                spinnerid = 'inventory_items_spinner';
-                break;
-            default:
-                break;
-        }
-
-        container = container && container.length > 0 ? container : null;
-        return { container, spinnerid };
-    }
-
-    $.fn.delayedEach = function (timeout, callback, continuous) {
-        const $els = this;
-        const iterator = function (index) {
-            if (index >= $els.length) {
-                if (!continuous) {
-                    return;
-                }
-                index = 0;
+$.fn.delayedEach = function (timeout, callback, continuous) {
+    const $els = this;
+    const iterator = function (index) {
+        if (index >= $els.length) {
+            if (!continuous) {
+                return;
             }
+            index = 0;
+        }
 
-            const cur = $els[index];
-            callback.call(cur, index, cur);
+        const cur = $els[index];
+        callback.call(cur, index, cur);
 
-            setTimeout(() => {
-                iterator(++index);
-            }, timeout);
-        };
-
-        iterator(0);
+        setTimeout(() => {
+            iterator(++index);
+        }, timeout);
     };
-    //#endregion
+
+    iterator(0);
+};
+//#endregion
 }(jQuery, async));
