@@ -2127,7 +2127,7 @@
                     $('.sell_selected').show();
                     if (canSellSelectedItemsManually(items)) {
                         $('.sell_manual').show();
-                        $('.sell_manual > span').text(`Sell ${selectedItems}${selectedItems == 1 ? ' Item Manual' : ' Items Manual'}`);
+                        $('.sell_manual > span').text(`Sell ${selectedItems}${selectedItems == 1 ? ' Item' : ' Items'} Manual`);
                     } else {
                         $('.sell_manual').hide();
                     }
@@ -2225,12 +2225,12 @@
             baseLink.hide();
 
             // Add market link to a button
-            ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${marketLink}"><span>View in Community Market</span></a></div>`);
+            ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${marketLink}"><span>查看社区市场</span></a></div>`);
 
             const isBoosterPack = selectedItem.name.toLowerCase().endsWith('booster pack');
             if (isBoosterPack) {
                 const tradingCardsUrl = `/market/search?q=&category_753_Game%5B%5D=tag_app_${selectedItem.market_fee_app}&category_753_item_class%5B%5D=tag_item_class_2&appid=753`;
-                ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${tradingCardsUrl}"><span>View trading cards in Community Market</span></a></div>`);
+                ownerActions.append(`<div style='display:flex'><a class="btn_small btn_grey_white_innerfade" href="${tradingCardsUrl}"><span>查看交易卡牌在社区市场的情况</span></a></div>`);
             }
 
             if (getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) != 1) {
@@ -2868,7 +2868,7 @@
                         $('.actual_content', listingUI).css('background', COLOR_PENDING);
 
                         setTimeout(() => {
-                            const itemName = $('.market_listing_item_name_link', listingUI).first().attr('href');
+                            const itemName = $('.market_listing_item_name', listingUI).first().attr('href');
                             const marketHashNameIndex = itemName.lastIndexOf('/') + 1;
                             const marketHashName = itemName.substring(marketHashNameIndex);
                             const decodedMarketHashName = decodeURIComponent(itemName.substring(marketHashNameIndex));
@@ -3954,68 +3954,68 @@
     function openSettings() {
         const price_options = $(`<div id="see_settings_modal">
             <div>
-                Calculate prices as the:&nbsp;
+                价格计算方式:&nbsp;
                 <select id="${SETTING_PRICE_ALGORITHM}">
-                    <option value="1"${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 1 ? 'selected="selected"' : ''}>Maximum of the average history and lowest sell listing</option>
-                    <option value="2" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 2 ? 'selected="selected"' : ''}>Lowest sell listing</option>
-                    <option value="3" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 3 ? 'selected="selected"' : ''}>Highest current buy order or lowest sell listing</option>
+                    <option value="1"${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 1 ? 'selected="selected"' : ''}>历史均价与最低在售价中的最大值</option>
+                    <option value="2" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 2 ? 'selected="selected"' : ''}>最低在售价</option>
+                    <option value="3" ${getSettingWithDefault(SETTING_PRICE_ALGORITHM) == 3 ? 'selected="selected"' : ''}>最高当前求购或最低在售价</option>
                 </select>
             </div>
             <div style="margin-top:6px;">
-                Hours to use for the average history calculated price:&nbsp;
+                用于历史均价计算的小时数:&nbsp;
                 <input type="number" min="0" step="2" id="${SETTING_PRICE_HISTORY_HOURS}" value=${getSettingWithDefault(SETTING_PRICE_HISTORY_HOURS)}>
             </div>
             <div style="margin-top:6px;">
-                The value to add to the calculated price (minimum and maximum are respected):&nbsp;
+                在计算价格时增加的数值（会遵循最小和最大值）:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_PRICE_OFFSET}" value=${getSettingWithDefault(SETTING_PRICE_OFFSET)}>
             </div>
             <div style="margin-top:6px">
-                Use the second lowest sell listing when the lowest sell listing has a low quantity:&nbsp;
+                当最低在售价数量较少时使用第二低售价:&nbsp;
                 <input type="checkbox" id="${SETTING_PRICE_IGNORE_LOWEST_Q}" ${getSettingWithDefault(SETTING_PRICE_IGNORE_LOWEST_Q) == 1 ? 'checked' : ''}>
             </div>
             <div style="margin-top:6px;">
-                Don't check market listings with prices of and below:&nbsp;
+                不检查价格低于或等于此值的市场挂单:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_PRICE_MIN_CHECK_PRICE}" value=${getSettingWithDefault(SETTING_PRICE_MIN_CHECK_PRICE)}>
             </div>
             <div style="margin-top:6px;">
-                Don't list market listings with prices of and below:&nbsp;
+                不挂出价格低于或等于此值的市场挂单:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_PRICE_MIN_LIST_PRICE}" value=${getSettingWithDefault(SETTING_PRICE_MIN_LIST_PRICE)}>
             </div>
             <div style="margin-top:24px">
-                Show price labels in inventory:&nbsp;
+                在库存中显示价格标签:&nbsp;
                 <input type="checkbox" id="${SETTING_INVENTORY_PRICE_LABELS}" ${getSettingWithDefault(SETTING_INVENTORY_PRICE_LABELS) == 1 ? 'checked' : ''}>
             </div>
             <div style="margin-top:6px">
-                Show price labels in trade offers:&nbsp;
+                在交易报价中显示价格标签:&nbsp;
                 <input type="checkbox" id="${SETTING_TRADEOFFER_PRICE_LABELS}" ${getSettingWithDefault(SETTING_TRADEOFFER_PRICE_LABELS) == 1 ? 'checked' : ''}>
             </div>
             <div style="margin-top:6px">
-                Show quick sell info and buttons:&nbsp;
+                显示快速出售信息和按钮:&nbsp;
                 <input type="checkbox" id="${SETTING_QUICK_SELL_BUTTONS}" ${getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) == 1 ? 'checked' : ''}>
             </div>
             <div style="margin-top:24px;">
-                Minimum:&nbsp;
+                普通卡牌最低价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MIN_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_NORMAL_PRICE)}>
-                &nbsp;and maximum:&nbsp;
+                &nbsp;和最高价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MAX_NORMAL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_NORMAL_PRICE)}>
-                &nbsp;price for normal cards
+                &nbsp;（普通卡牌）
             </div>
             <div style="margin-top:6px;">
-                Minimum:&nbsp;
+                箔卡最低价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MIN_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MIN_FOIL_PRICE)}>
-                &nbsp;and maximum:&nbsp;
+                &nbsp;和最高价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MAX_FOIL_PRICE}" value=${getSettingWithDefault(SETTING_MAX_FOIL_PRICE)}>
-                &nbsp;price for foil cards
+                &nbsp;（箔卡）
             </div>
             <div style="margin-top:6px;">
-                Minimum:&nbsp;
+                其他物品最低价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MIN_MISC_PRICE}" value=${getSettingWithDefault(SETTING_MIN_MISC_PRICE)}>
-                &nbsp;and maximum:&nbsp;
+                &nbsp;和最高价:&nbsp;
                 <input type="number" step="0.01" id="${SETTING_MAX_MISC_PRICE}" value=${getSettingWithDefault(SETTING_MAX_MISC_PRICE)}>
-                &nbsp;price for other items
+                &nbsp;（其他物品）
             </div>
             <div style="margin-top:6px;">
-                Automatically relist overpriced market listings (slow on large inventories):&nbsp;
+                自动重新挂出高价市场挂单（库存较大时较慢）:&nbsp;
                 <input id="${SETTING_RELIST_AUTOMATICALLY}" class="market_relist_auto" type="checkbox" ${getSettingWithDefault(SETTING_RELIST_AUTOMATICALLY) == 1 ? 'checked' : ''}>
             </div>
         </div>`);
